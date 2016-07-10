@@ -18,17 +18,17 @@ Options:
 You can run mefw one time to parse a file or as a HTTP server daemon. For file I/O run mefw with *process* key and specify **<processor>**, **<inputfile>** and **<outputfile>**.
 You can get list of available processors by running
 ```mefw list processors```
-Server mefw need **<ip>** on which should server listen. You can also specify port **--port=<num>**.
+Server mefw need ```<ip>``` on which should server listen. You can also specify port ```--port=<num>```.
 
 ## Libraries and external resourecs
-Application libraries via Maven
-Processors libraries via Maven
-Processor itself via Maven or as JAR/class included in CLASSPATH
-Resources in folder **resources/<ProcessorName>/...**
+- Application libraries via Maven
+- Processors libraries via Maven
+- Processor itself via Maven or as JAR/class included in CLASSPATH
+- Resources in folder ```resources/<ProcessorName>/...```
 
 
 ## Usage
 TODO:
 
 ## PluginAdapter example
-Example is available **/src/main/java/cz/vutbr/mefw/plugins/TwiterSentiClassifier.java**
+Example is available ```/src/main/java/cz/vutbr/mefw/plugins/TwiterSentiClassifier.java```
