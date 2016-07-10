@@ -33,7 +33,7 @@ public class Mefw {
                     + "Options:\n"
                     + "  -h --help        Show this screen.\n"
                     + "  --version        Show version.\n"
-                    + "  --threads=<num>  Speed in knots [default: 1].\n"
+                    + "  <ip>             IP address on which server will listen [default: 0.0.0.0].\n"
                     + "  --port=<num>     Server listening port [default: 80].\n"
                     + "\n";
 
