@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +23,6 @@ public class ProcessorPool {
 
     Map<String, ProcessorAdapter> processors;
     Config config;
-
-    public ProcessorPool(){
-        processors = new HashMap<String, ProcessorAdapter>();
-    }
-
 
     public ProcessorPool(Config config){
         processors = new HashMap<String, ProcessorAdapter>();
@@ -48,8 +44,8 @@ public class ProcessorPool {
      */
     public List<String> getProcessorList(boolean stripExtension){
         ArrayList<String> classes = new ArrayList<String>();
-
-        File folder = new File(processorsPath);
+        System.out.println(Paths.get(this.config.get("pluginsPath")).toAbsolutePath().toString());
+        File folder = new File(Paths.get(this.config.get("pluginsPath")).toAbsolutePath().toString());
         File[] listOfFiles = folder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.toLowerCase().endsWith(".class");
@@ -92,7 +88,7 @@ public class ProcessorPool {
 
         try {
             //ClassLoader classLoader = this.getClass().getClassLoader();
-            URL url = new URL("file:/" + projectPath);
+            URL url = new URL("file:/" + Paths.get(this.config.get("projectPath")).toAbsolutePath().toString());
             URL[] urls = new URL[]{url};
             ClassLoader classLoader = new URLClassLoader(urls);
 
@@ -104,7 +100,7 @@ public class ProcessorPool {
             ProcessorAdapter myClassObject = (ProcessorAdapter)constructor.newInstance(this.config);
             System.out.println("Initializing processors data: " + loadedMyClass.getName());
             myClassObject.load();
-            return  myClassObject;
+            return myClassObject;
 
         //TODO: proper error handling
         } catch (ClassNotFoundException e) {

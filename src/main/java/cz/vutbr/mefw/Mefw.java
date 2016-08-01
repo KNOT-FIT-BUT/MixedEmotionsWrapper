@@ -19,18 +19,20 @@ public class Mefw {
 
     private ProcessorPool processorPool;
     private HTTPServer server;
+    private Config config;
 
     private static String doc =
             "Mixed Emotions IO\n"
                     + "\n"
                     + "Usage:\n"
-                    + "  mefw server <ip> [--port=<port>]\n"
-                    + "  mefw process <processor> <inputfile> <outputfile> \n"
-                    + "  mefw list processors \n"
+                    + "  mefw server <ip> [--port=<port> --config=<conf>]\n"
+                    + "  mefw process <processor> <inputfile> <outputfile> [--config=<conf>]\n"
+                    + "  mefw list processors [--config=<conf>]\n"
                     + "  mefw (-h | --help)\n"
                     + "  mefw --version\n"
                     + "\n"
                     + "Options:\n"
+                    + "  --config=<conf>        Show this screen.\n"
                     + "  -h --help        Show this screen.\n"
                     + "  --version        Show version.\n"
                     + "  <ip>             IP address on which server will listen [default: 0.0.0.0].\n"
@@ -39,8 +41,18 @@ public class Mefw {
 
 
     public Mefw(){
-        processorPool =  new ProcessorPool();
+        config = new Config();
+        processorPool =  new ProcessorPool(config);
         server  = new HTTPServer(processorPool);
+
+    }
+
+    public void loadConfig(String filepath){
+        try {
+            this.config.load(filepath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void processFile(String in, String out, String processorName){
@@ -81,8 +93,11 @@ public class Mefw {
     public static void main(String [] args){
         Map<String, Object> opts = new Docopt(doc).withVersion("Mixed Emotions 0.1").parse(args);
         //TODO: make global debug mode
-        //System.out.println(opts);
+        System.out.println(opts);
         Mefw core = new Mefw();
+        if((String)opts.get("--config") != null){
+            core.loadConfig((String)opts.get("--config"));
+        }
         if((Boolean)opts.get("server")){
             System.out.println("starting server");
             core.startServer((String)opts.get("<ip>"), Integer.parseInt((String)opts.get("--port")));
