@@ -43,15 +43,20 @@ public class Mefw {
         server  = new HTTPServer(processorPool);
     }
 
+
     private void processFile(String in, String out, String processorName){
 
         processorPool.load(processorName);
         ProcessorAdapter processor = processorPool.get(processorName);
         try {
-            String input = new Scanner(new File(in)).useDelimiter("\\Z").next();
-            String output = processor.process(input);
+            Scanner input = new Scanner(new File(in));
             PrintWriter outputfile = new PrintWriter(out);
-            outputfile.println(output);
+            // xorman00 : to je asi to co by clovek ocakaval
+            while(  input.hasNext() )
+            {
+                String output = processor.process(input.next());
+                outputfile.println(output);
+            }
             outputfile.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -69,7 +74,7 @@ public class Mefw {
     private void listProcessors(){
         System.out.println("List of available processors:");
         List<String> classes = processorPool.getProcessorList(true);
-        for (int i = 0; i < classes.size(); i++) {
+        for (int i = 0; classes!=null && i < classes.size(); i++) {
             System.out.println(classes.get(i));
         }
         processorPool.loadAll();

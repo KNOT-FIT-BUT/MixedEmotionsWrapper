@@ -28,7 +28,7 @@ public class Config {
      * @return the value of the key
      */
     public String get(String key){
-        return this.get("defualt", key);
+        return this.get("default", key);
     }
 
     /**
