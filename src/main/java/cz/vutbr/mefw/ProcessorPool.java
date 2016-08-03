@@ -18,7 +18,8 @@ import java.util.Map;
 
 public class ProcessorPool {
 
-    String processorsPath = "X:\\projects\\mefw\\target\\classes\\cz\\vutbr\\mefw\\plugins";
+    // xorman00: zmeneny path
+    String processorsPath = "target/classes/cz/vutbr/mefw/plugins";
     String projectPath = "X:\\projects\\mefw\\target\\classes\\";
 
     Map<String, ProcessorAdapter> processors;
@@ -51,17 +52,24 @@ public class ProcessorPool {
                 return name.toLowerCase().endsWith(".class");
             }
         });
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                if(stripExtension){
-                    classes.add(this.stripExtension(listOfFiles[i].getName()));
-                }else{
-                    classes.add(listOfFiles[i].getName());
+        // xorman00: co ked tam nie je ziadny procesor? preto tam je ten null
+        if(listOfFiles!=null)
+        {
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    if(stripExtension){
+                        classes.add(this.stripExtension(listOfFiles[i].getName()));
+                    }else{
+                        classes.add(listOfFiles[i].getName());
+                    }
                 }
             }
+            return classes;
         }
-        return classes;
+        else
+        {
+            return null;
+        }
     }
 
     /** Load selected class by name
@@ -75,7 +83,8 @@ public class ProcessorPool {
      */
     public void loadAll(){
        List<String> classes = this.getProcessorList(true);
-       for (int i = 0; i < classes.size(); i++) {
+        // xorman00: co ked tam nie je ziadny procesor? preto tam je ten null
+       for (int i = 0; classes!=null && i < classes.size(); i++) {
             this.processors.put(classes.get(i), this.loadClass(classes.get(i)));
        }
     }
@@ -96,8 +105,14 @@ public class ProcessorPool {
             System.out.println("Loading processor: " + loadedMyClass.getName());
 
             // Create a new instance from the loaded class
-            Constructor constructor = loadedMyClass.getConstructor();
-            ProcessorAdapter myClassObject = (ProcessorAdapter)constructor.newInstance(this.config);
+            // xorman00: chybal tu config aspon nejaky
+            this.config = new Config();
+            /* xorman00:
+             Tu jednak je dolezite uviest aky presne konstuktor sa ma pouzit, lebo ja ich mam viac
+             loadedMyClass.getConstructor(Config.class);
+             */
+            Constructor constructor = loadedMyClass.getConstructor(Config.class);
+            ProcessorAdapter myClassObject = (ProcessorAdapter) constructor.newInstance(this.config);
             System.out.println("Initializing processors data: " + loadedMyClass.getName());
             myClassObject.load();
             return myClassObject;
