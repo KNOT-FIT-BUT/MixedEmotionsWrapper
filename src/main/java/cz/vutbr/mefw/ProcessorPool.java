@@ -18,8 +18,6 @@ import java.util.Map;
 
 public class ProcessorPool {
 
-    String processorsPath = "X:\\projects\\mefw\\target\\classes\\cz\\vutbr\\mefw\\plugins";
-    String projectPath = "X:\\projects\\mefw\\target\\classes\\";
 
     Map<String, ProcessorAdapter> processors;
     Config config;
@@ -51,15 +49,17 @@ public class ProcessorPool {
                 return name.toLowerCase().endsWith(".class");
             }
         });
-
-        for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) {
-                if(stripExtension){
-                    classes.add(this.stripExtension(listOfFiles[i].getName()));
-                }else{
-                    classes.add(listOfFiles[i].getName());
+        if(listOfFiles!=null){
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    if(stripExtension){
+                        classes.add(this.stripExtension(listOfFiles[i].getName()));
+                    }else{
+                        classes.add(listOfFiles[i].getName());
+                    }
                 }
             }
+
         }
         return classes;
     }
@@ -104,8 +104,10 @@ public class ProcessorPool {
 
         //TODO: proper error handling
         } catch (ClassNotFoundException e) {
+            System.err.println("Could not find processor: "+name);
             e.printStackTrace();
         } catch (Exception e) {
+            System.err.println("Unexpected error when loading: "+name);
             e.printStackTrace();
         }
 

@@ -66,6 +66,7 @@ public class Mefw {
             outputfile.println(output);
             outputfile.close();
         } catch (FileNotFoundException e) {
+            System.err.println("Processing failed with file: " + in);
             e.printStackTrace();
         }
 
